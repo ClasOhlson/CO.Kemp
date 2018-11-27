@@ -3,7 +3,7 @@
   <Manifest>
     <Identity>
       <ID>CO.Kemp</ID>
-      <Version>1.0.0.118</Version>
+      <Version>1.0.0.122</Version>
     </Identity>
     <Name>CO.Kemp</Name>
     <References>
@@ -1314,7 +1314,7 @@ else {
         <AlertSettings AlertMessage="CO.Kemp.SubVSStatusMonitor.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
-          <AlertPriority>Low</AlertPriority>
+          <AlertPriority>Normal</AlertPriority>
           <AlertSeverity>MatchMonitorHealth</AlertSeverity>
         </AlertSettings>
         <OperationalStates>
@@ -1325,6 +1325,75 @@ else {
         <Configuration>
           <Identifier>$Target/Property[Type='CO.Kemp.SubVirtualService']/VSIndex$</Identifier>
           <Type>SubVS</Type>
+          <IntervalSeconds>600</IntervalSeconds>
+          <SyncTime />
+          <TimeoutSeconds>120</TimeoutSeconds>
+          <ErrorExpression>
+            <And>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='enabled']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Y</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='status']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Down</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </And>
+          </ErrorExpression>
+          <WarningExpression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="String">Property[@Name='enabled']</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="String">N</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </WarningExpression>
+          <HealthyExpression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="String">Property[@Name='status']</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="String">Up</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </HealthyExpression>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="CO.Kemp.RealServerStatusMonitor" Accessibility="Public" Enabled="true" Target="CO.Kemp.RealServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="CO.Kemp.StatusMonitor.ThreeStateMonitorType" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="CO.Kemp.RealServerStatusMonitor.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Warning</AlertSeverity>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Healthy" HealthState="Success" />
+          <OperationalState ID="Warning" MonitorTypeStateID="Warning" HealthState="Warning" />
+          <OperationalState ID="Error" MonitorTypeStateID="Error" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <Identifier>$Target/Property[Type='CO.Kemp.RealServer']/RsIndex$</Identifier>
+          <Type>rs</Type>
           <IntervalSeconds>600</IntervalSeconds>
           <SyncTime />
           <TimeoutSeconds>120</TimeoutSeconds>
@@ -1452,6 +1521,7 @@ else {
   <Presentation>
     <StringResources>
       <StringResource ID="CO.Kemp.SubVSStatusMonitor.AlertMessage" />
+      <StringResource ID="CO.Kemp.RealServerStatusMonitor.AlertMessage" />
       <StringResource ID="CO.Kemp.VirtualServiceStatusMonitor.AlertMessage" />
     </StringResources>
   </Presentation>
@@ -1709,6 +1779,28 @@ else {
           <Description>PossibleIssue</Description>
         </DisplayString>
         <DisplayString ElementID="CO.Kemp.SubVSStatusMonitor" SubElementID="Error">
+          <Name>Down</Name>
+          <Description>Down</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.RealServerStatusMonitor">
+          <Name>CO Kemp VirtualService Status Monitor</Name>
+          <Description>Checks status of Kemp VirtualService</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.RealServerStatusMonitor.AlertMessage">
+          <Name>Kemp RS Is Down</Name>
+          <Description>KEMP RealServer is Down!
+
+This might effect the availability of it's VirtualService, depending on the number of available RealServers attached.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.RealServerStatusMonitor" SubElementID="Healthy">
+          <Name>Up</Name>
+          <Description>Up</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.RealServerStatusMonitor" SubElementID="Warning">
+          <Name>PossibleIssue</Name>
+          <Description>PossibleIssue</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.RealServerStatusMonitor" SubElementID="Error">
           <Name>Down</Name>
           <Description>Down</Description>
         </DisplayString>
