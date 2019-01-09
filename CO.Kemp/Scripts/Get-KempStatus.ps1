@@ -402,7 +402,6 @@ foreach ($url in $LoadMasterBaseUrls) {
 									"enabled" = $rs.Enable
 									"identifier" = $identifier
 								})
-
                                 $logString += "`n`t`t`t`tRS: $($rsKey)-$($rs.Addr)"
                             }
                         }
