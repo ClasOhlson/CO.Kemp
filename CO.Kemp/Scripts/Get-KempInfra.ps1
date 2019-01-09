@@ -375,7 +375,7 @@ foreach ($url in $urls) {
 
                         # Instantiate RS
                         $rsInstance = $discoveryData.CreateClassInstance("$MPElement[Name='CO.Kemp.RealServer']$")
-                        $rsInstance.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", "$rsKey-$($rs.Addr):$($rs.Port)")
+                        $rsInstance.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", "$($rs.Addr):$($rs.Port) ($($vs.NickName))")
                         $rsInstance.AddProperty("$MPElement[Name='CO.Kemp.RealServer']/RsIndex$", $identifier)
                         $rsInstance.AddProperty("$MPElement[Name='CO.Kemp.RealServer']/Forward$", $rs.Forward)
                         $rsInstance.AddProperty("$MPElement[Name='CO.Kemp.RealServer']/Addr$", $rs.Addr)
@@ -446,7 +446,7 @@ foreach ($url in $urls) {
 
                                 # Instantiate RS
                                 $rsInstance = $discoveryData.CreateClassInstance("$MPElement[Name='CO.Kemp.RealServer']$")
-                                $rsInstance.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", "$rsKey-$($rs.Addr):$($rs.Port)")
+                                $rsInstance.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", "$($rs.Addr):$($rs.Port) ($($subVS.NickName))")
                                 $rsInstance.AddProperty("$MPElement[Name='CO.Kemp.RealServer']/RsIndex$", $identifier)
                                 $rsInstance.AddProperty("$MPElement[Name='CO.Kemp.RealServer']/Forward$", $rs.Forward)
                                 $rsInstance.AddProperty("$MPElement[Name='CO.Kemp.RealServer']/Addr$", $rs.Addr)
