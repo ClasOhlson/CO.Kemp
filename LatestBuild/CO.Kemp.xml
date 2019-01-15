@@ -3,7 +3,7 @@
   <Manifest>
     <Identity>
       <ID>CO.Kemp</ID>
-      <Version>1.0.0.137</Version>
+      <Version>1.0.0.140</Version>
     </Identity>
     <Name>CO.Kemp</Name>
     <References>
@@ -25,6 +25,11 @@
       <Reference Alias="System">
         <ID>System.Library</ID>
         <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Perf">
+        <ID>System.Performance.Library</ID>
+        <Version>7.0.8437.0</Version>
         <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
       </Reference>
     </References>
@@ -166,6 +171,42 @@
           </Composite>
         </ModuleImplementation>
         <OutputType>System!System.Discovery.Data</OutputType>
+      </DataSourceModuleType>
+      <DataSourceModuleType ID="CO.Kemp.PerformanceDataMapper.DataSource" Accessibility="Internal">
+        <Configuration>
+          <xsd:element name="Identifier" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Type" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="ObjectName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="CounterName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="InstanceName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Value" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <DataSource ID="PropertyBag" TypeID="CO.Kemp.StatusMonitoring.TimedDataSource">
+                <Identifier>$Config/Identifier$</Identifier>
+                <Type>$Config/Type$</Type>
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime />
+                <TimeoutSeconds>120</TimeoutSeconds>
+              </DataSource>
+              <ConditionDetection ID="DataMapper" TypeID="Perf!System.Performance.DataGenericMapper">
+                <ObjectName>$Config/ObjectName$</ObjectName>
+                <CounterName>$Config/CounterName$</CounterName>
+                <InstanceName>$Config/InstanceName$</InstanceName>
+                <Value>$Config/Value$</Value>
+              </ConditionDetection>
+            </MemberModules>
+            <Composition>
+              <Node ID="DataMapper">
+                <Node ID="PropertyBag" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Perf!System.Performance.Data</OutputType>
       </DataSourceModuleType>
       <DataSourceModuleType ID="CO.Kemp.StatusMonitoring.TimedDataSource" Accessibility="Internal">
         <Configuration>
@@ -808,7 +849,11 @@ $knownDebugHosts = @(
 if ($host.Name -in $knownDebugHosts) {
     # script is running in a known debug environment, set debug values
     $tempDir = "$env:TEMP\CO.Kemp"
-    $credPath = $tempDir + "\kempcreds.xml"
+    
+	# needed a slightly more secure way to debug these scripts
+	# using serialized credentials (encrypted) from file
+	# if file is missing, script will ask for credentials, and save them for later use
+	$credPath = $tempDir + "\kempcreds.xml"
     if (Test-Path -Path $credPath) {
         $credentials = Import-Clixml -Path $credPath
     } else {
@@ -818,8 +863,7 @@ if ($host.Name -in $knownDebugHosts) {
     
     [string] $kempUser = $credentials.UserName
     [string] $kempPass = $credentials.GetNetworkCredential().Password
-    #$LoadMasterBaseUrls = @("https://avmk01.westeurope.cloudapp.azure.com:8443/") #my free tier azure appliance, perfect for development, may be offline
-    $LoadMasterBaseUrls = @("https://172.21.11.8/")
+    $LoadMasterBaseUrls = @("https://avmk01.westeurope.cloudapp.azure.com:8443/") #my free tier azure appliance, perfect for development, may be offline
     if (!(Test-Path -Path $tempDir)) {New-Item -Path $tempDir -ItemType Directory}
     $isDebugging = $true
 }

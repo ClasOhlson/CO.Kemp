@@ -17,7 +17,11 @@ $knownDebugHosts = @(
 if ($host.Name -in $knownDebugHosts) {
     # script is running in a known debug environment, set debug values
     $tempDir = "$env:TEMP\CO.Kemp"
-    $credPath = $tempDir + "\kempcreds.xml"
+    
+	# needed a slightly more secure way to debug these scripts
+	# using serialized credentials (encrypted) from file
+	# if file is missing, script will ask for credentials, and save them for later use
+	$credPath = $tempDir + "\kempcreds.xml"
     if (Test-Path -Path $credPath) {
         $credentials = Import-Clixml -Path $credPath
     } else {
@@ -27,8 +31,7 @@ if ($host.Name -in $knownDebugHosts) {
     
     [string] $kempUser = $credentials.UserName
     [string] $kempPass = $credentials.GetNetworkCredential().Password
-    #$LoadMasterBaseUrls = @("https://avmk01.westeurope.cloudapp.azure.com:8443/") #my free tier azure appliance, perfect for development, may be offline
-    $LoadMasterBaseUrls = @("https://172.21.11.8/")
+    $LoadMasterBaseUrls = @("https://avmk01.westeurope.cloudapp.azure.com:8443/") #my free tier azure appliance, perfect for development, may be offline
     if (!(Test-Path -Path $tempDir)) {New-Item -Path $tempDir -ItemType Directory}
     $isDebugging = $true
 }
