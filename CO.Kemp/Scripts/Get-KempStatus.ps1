@@ -17,7 +17,18 @@ $knownDebugHosts = @(
 if ($host.Name -in $knownDebugHosts) {
     # script is running in a known debug environment, set debug values
     $tempDir = "$env:TEMP\CO.Kemp"
-    $LoadMasterBaseUrls = @("https://avmk01.westeurope.cloudapp.azure.com:8443/") #my free tier azure appliance, perfect for development, may be offline
+    $credPath = $tempDir + "\kempcreds.xml"
+    if (Test-Path -Path $credPath) {
+        $credentials = Import-Clixml -Path $credPath
+    } else {
+        $credentials = Get-Credential -Message "Enter Kemp Login"
+        Export-Clixml -Path $credPath -InputObject $credentials
+    }
+    
+    [string] $kempUser = $credentials.UserName
+    [string] $kempPass = $credentials.GetNetworkCredential().Password
+    #$LoadMasterBaseUrls = @("https://avmk01.westeurope.cloudapp.azure.com:8443/") #my free tier azure appliance, perfect for development, may be offline
+    $LoadMasterBaseUrls = @("https://172.21.11.8/")
     if (!(Test-Path -Path $tempDir)) {New-Item -Path $tempDir -ItemType Directory}
     $isDebugging = $true
 }
@@ -61,12 +72,12 @@ class Kemp {
                 $all[$allXml.Name] = $all[$allXml.Name] + "," + $allXml.InnerText
             }
             else {
-                $all.Add($allXml.Name, $allXml.InnerText)
+                $all.Add($allXml.Name, $allXml.InnerText) | Out-Null
             }
         }
         if ($all.Count -gt 1) {
             #got results, add proper management property
-            $all.Add("managementhost", $(([System.Uri]$this.AdminAdress).Host))
+            $all.Add("managementhost", $(([System.Uri]$this.AdminAdress).Host)) | Out-Null
         }
         return $all
     }
@@ -82,7 +93,7 @@ class Kemp {
                 $all[$allXml.Name] = $all[$allXml.Name] + "," + $allXml.InnerText
             }
             else {
-                $all.Add($allXml.Name, $allXml.InnerText)
+                $all.Add($allXml.Name, $allXml.InnerText) | Out-Null
             }
         }
 
@@ -100,7 +111,7 @@ class Kemp {
                 $all[$allXml.Name] = $all[$allXml.Name] + "," + $allXml.InnerText
             }
             else {
-                $all.Add($allXml.Name, $allXml.InnerText)
+                $all.Add($allXml.Name, $allXml.InnerText) | Out-Null
             }
         }
 
@@ -125,7 +136,7 @@ class Kemp {
                     "Enable"   = $rsXml.Enable
                     "Critical" = $rsXml.Critical
                 }
-            )
+            ) | Out-Null
         }
 
         return $rs
@@ -196,7 +207,7 @@ class Kemp {
                     "Cache"                = $vsXml.Cache
                     "ClientCert"           = $vsXml.ClientCert
                 }
-            )
+            ) | Out-Null
         }
         return ($vs)
     }
@@ -362,7 +373,7 @@ foreach ($url in $LoadMasterBaseUrls) {
 							"status" = $rs.Status
 							"enabled" = $rs.Enable
 							"identifier" = $identifier
-						})
+						}) | Out-Null
 
                         $logString += "`n`t`t`tRS: $($rsKey)-$($rs.Addr)"
                     }
@@ -401,7 +412,7 @@ foreach ($url in $LoadMasterBaseUrls) {
 									"status" = $rs.Status
 									"enabled" = $rs.Enable
 									"identifier" = $identifier
-								})
+								}) | Out-Null
                                 $logString += "`n`t`t`t`tRS: $($rsKey)-$($rs.Addr)"
                             }
                         }
