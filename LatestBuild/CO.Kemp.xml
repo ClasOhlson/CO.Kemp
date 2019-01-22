@@ -3,10 +3,15 @@
   <Manifest>
     <Identity>
       <ID>CO.Kemp</ID>
-      <Version>1.0.0.140</Version>
+      <Version>1.0.0.148</Version>
     </Identity>
     <Name>CO.Kemp</Name>
     <References>
+      <Reference Alias="MSDL">
+        <ID>Microsoft.SystemCenter.DataWarehouse.Library</ID>
+        <Version>7.2.11719.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
       <Reference Alias="SC">
         <ID>Microsoft.SystemCenter.Library</ID>
         <Version>7.0.8437.0</Version>
@@ -180,7 +185,7 @@
           <xsd:element name="ObjectName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element name="CounterName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element name="InstanceName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="Value" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Value" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
         </Configuration>
         <ModuleImplementation>
           <Composite>
@@ -1492,6 +1497,260 @@ else {
         </DataSource>
       </Discovery>
     </Discoveries>
+    <Rules>
+      <Rule ID="CO.Kemp.LoadMaster.VSTotals_PktsPerSec.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</Identifier>
+            <Type>lm</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</ObjectName>
+            <CounterName>VSTotals_PktsPerSec</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
+            <Value>$Data/Property[@Name='VSTotals_PktsPerSec']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.VSConnsPerSecCollection" Target="CO.Kemp.VirtualService" Enabled="false" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.VirtualService']/VSIndex$</Identifier>
+            <Type>vs</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.VirtualService']/NickName$</ObjectName>
+            <CounterName>ConnsPerSec</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.VirtualService']/NickName$</InstanceName>
+            <Value>$Data/Property[@Name='ConnsPerSec']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.VirtualService.ConnectionsPerSec.Collection" Target="CO.Kemp.VirtualService" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.VirtualService']/VSIndex$</Identifier>
+            <Type>vs</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.VirtualService']/NickName$</ObjectName>
+            <CounterName>ConnsPerSec</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.VirtualService']/NickName$</InstanceName>
+            <Value>$Data/Property[@Name='ConnsPerSec']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.SubVirtualService.ActiveConnections.Collection" Target="CO.Kemp.SubVirtualService" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.SubVirtualService']/VSIndex$</Identifier>
+            <Type>SubVS</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.SubVirtualService']/NickName$</ObjectName>
+            <CounterName>ActiveConns</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.SubVirtualService']/NickName$</InstanceName>
+            <Value>$Data/Property[@Name='ActiveConns']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.VirtualService.ActiveConnections.Collection" Target="CO.Kemp.VirtualService" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.VirtualService']/VSIndex$</Identifier>
+            <Type>vs</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.VirtualService']/NickName$</ObjectName>
+            <CounterName>ActiveConns</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.VirtualService']/NickName$</InstanceName>
+            <Value>$Data/Property[@Name='ActiveConns']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.SubVirtualService.ConnectionPerSec.Collection" Target="CO.Kemp.SubVirtualService" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.SubVirtualService']/VSIndex$</Identifier>
+            <Type>SubVS</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.SubVirtualService']/NickName$</ObjectName>
+            <CounterName>ConnsPerSec</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.SubVirtualService']/NickName$</InstanceName>
+            <Value>$Data/Property[@Name='ConnsPerSec']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.LoadMaster.CPUSystemTotal.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</Identifier>
+            <Type>lm</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</ObjectName>
+            <CounterName>CPU_SystemTotal</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
+            <Value>$Data/Property[@Name='CPU_SystemTotal']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.LoadMaster.MEMUsed.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</Identifier>
+            <Type>lm</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</ObjectName>
+            <CounterName>MEM_used</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
+            <Value>$Data/Property[@Name='MEM_used']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.LoadMaster.MEMUsedPct.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</Identifier>
+            <Type>lm</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</ObjectName>
+            <CounterName>MEM_usedPct</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
+            <Value>$Data/Property[@Name='MEM_usedPct']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.LoadMaster.MEMFree.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</Identifier>
+            <Type>lm</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</ObjectName>
+            <CounterName>MEM_free</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
+            <Value>$Data/Property[@Name='MEM_free']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.LoadMaster.MEMFreePct.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</Identifier>
+            <Type>lm</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</ObjectName>
+            <CounterName>MEM_freePct</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
+            <Value>$Data/Property[@Name='MEM_freePct']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.LoadMaster.VSTotals_ConnsPerSec.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</Identifier>
+            <Type>lm</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</ObjectName>
+            <CounterName>VSTotals_ConnsPerSec</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
+            <Value>$Data/Property[@Name='VSTotals_ConnsPerSec']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.LoadMaster.VSTotals_BitsPerSec.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</Identifier>
+            <Type>lm</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</ObjectName>
+            <CounterName>VSTotals_BitsPerSec</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
+            <Value>$Data/Property[@Name='VSTotals_BitsPerSec']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.LoadMaster.VSTotals_BytesPerSec.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</Identifier>
+            <Type>lm</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</ObjectName>
+            <CounterName>VSTotals_BytesPerSec</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
+            <Value>$Data/Property[@Name='VSTotals_BytesPerSec']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+    </Rules>
     <Monitors>
       <UnitMonitor ID="CO.Kemp.SubVSStatusMonitor" Accessibility="Public" Enabled="true" Target="CO.Kemp.SubVirtualService" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="CO.Kemp.StatusMonitor.ThreeStateMonitorType" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
@@ -1827,6 +2086,10 @@ else {
           <Name>VS Index</Name>
           <Description></Description>
         </DisplayString>
+        <DisplayString ElementID="CO.Kemp.SubVirtualService" SubElementID="NickName">
+          <Name>VS Nickname</Name>
+          <Description></Description>
+        </DisplayString>
         <DisplayString ElementID="CO.Kemp.SubVirtualService" SubElementID="VSAddress">
           <Name>VS Address</Name>
           <Description></Description>
@@ -1885,6 +2148,10 @@ else {
         </DisplayString>
         <DisplayString ElementID="CO.Kemp.VirtualService" SubElementID="VSIndex">
           <Name>VS Index</Name>
+          <Description></Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.VirtualService" SubElementID="NickName">
+          <Name>VS Nickname</Name>
           <Description></Description>
         </DisplayString>
         <DisplayString ElementID="CO.Kemp.VirtualService" SubElementID="VSAddress">
@@ -2027,6 +2294,62 @@ This might effect the availability of it's VirtualService, depending on the numb
         <DisplayString ElementID="CO.Kemp.VirtualServiceHostsSubVirtualService">
           <Name>VirtualService Hosts SubVirtualService Relationship</Name>
           <Description></Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.LoadMaster.VSTotals_PktsPerSec.Collection">
+          <Name>KEMP LM VSTOTALS Packets per Sec Collection Rule</Name>
+          <Description>Collects VSTOTALS Packets per Second for KEMP LoadMaster</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.VSConnsPerSecCollection">
+          <Name>(DEPRECATED) KEMP VS Connection per Second Collection Rule</Name>
+          <Description>Collects Connection per Second for KEMP Virtual Service</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.VirtualService.ConnectionsPerSec.Collection">
+          <Name>KEMP VS Connections per Sec Collection Rule</Name>
+          <Description>Collects Connections per Second for KEMP Virtual Service</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.SubVirtualService.ActiveConnections.Collection">
+          <Name>KEMP SubVS Active Connections Collection Rule</Name>
+          <Description>Collects Active Connections for KEMP SubVS</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.VirtualService.ActiveConnections.Collection">
+          <Name>KEMP VS Active Connections Collection Rule</Name>
+          <Description>Collects Active Connections for KEMP Virtual Service</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.SubVirtualService.ConnectionPerSec.Collection">
+          <Name>KEMP SubVS Connections per Second Collection Rule</Name>
+          <Description>Collects Connections per Second for KEMP SubVS</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.LoadMaster.CPUSystemTotal.Collection">
+          <Name>KEMP LM CPU System Total Collection Rule</Name>
+          <Description>Collects CPU System Total percent for KEMP LoadMaster</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.LoadMaster.MEMUsed.Collection">
+          <Name>KEMP LM MEM Used Total Collection Rule</Name>
+          <Description>Collects MEM Used for KEMP LoadMaster</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.LoadMaster.MEMUsedPct.Collection">
+          <Name>KEMP LM MEM Used % Collection Rule</Name>
+          <Description>Collects MEM Used percent for KEMP LoadMaster</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.LoadMaster.MEMFree.Collection">
+          <Name>KEMP LM MEM Free Collection Rule</Name>
+          <Description>Collects MEM Free for KEMP LoadMaster</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.LoadMaster.MEMFreePct.Collection">
+          <Name>KEMP LM MEM Free % Collection Rule</Name>
+          <Description>Collects MEM Free Percent for KEMP LoadMaster</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.LoadMaster.VSTotals_ConnsPerSec.Collection">
+          <Name>KEMP LM VSTotals Connections per Sec Collection Rule</Name>
+          <Description>Collects VSTotals Connections per Second for KEMP LoadMaster</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.LoadMaster.VSTotals_BitsPerSec.Collection">
+          <Name>KEMP LM VSTOTALS Bits per Sec Collection Rule</Name>
+          <Description>Collects VSTOTALS Bits per Second for KEMP LoadMaster</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.LoadMaster.VSTotals_BytesPerSec.Collection">
+          <Name>KEMP LM VSTOTALS Bytes per Sec Collection Rule</Name>
+          <Description>Collects VSTOTALS Bytes per Second for KEMP LoadMaster</Description>
         </DisplayString>
         <DisplayString ElementID="CO.Kemp.KempRunasProfile">
           <Name>KEMP Runas Profile</Name>
