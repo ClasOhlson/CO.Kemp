@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- CO.Kemp.LoadMaster.APIAvailability.Monitor
+- CO.Kemp.LoadMaster.HA1IsActive.Collection
+- CO.Kemp.LoadMaster.HA2IsActive.Collection
+
 ## [v1.0.0-alpha.2]
 
 ### Added

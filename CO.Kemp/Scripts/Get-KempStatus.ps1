@@ -535,6 +535,16 @@ foreach ($url in $LoadMasterBaseUrls) {
                 }
             }
         }
+    } else {
+        # No response from LoadMaster
+        # Create LM Propertybag for a "no response" error
+        $identifier = $(([System.Uri]$url).Host)
+
+        $pbHTArray.Add(@{
+            "objecttype" = "lm"
+            "responds"   = "no"
+            "identifier" = $identifier.Trim()
+        }) | Out-Null
     }
 }
 
