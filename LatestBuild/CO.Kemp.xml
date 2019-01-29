@@ -3,7 +3,7 @@
   <Manifest>
     <Identity>
       <ID>CO.Kemp</ID>
-      <Version>1.0.0.150</Version>
+      <Version>1.0.0.160</Version>
     </Identity>
     <Name>CO.Kemp</Name>
     <References>
@@ -1239,7 +1239,7 @@ foreach ($url in $LoadMasterBaseUrls) {
     }
 
     if ($allHt.Count -gt 0) {
-        # got data in allHT, which means here's a LoadMaster returned.
+        # got data in allHT, which means there's a LoadMaster returned.
 
         [string] $identifier = $allHt.managementhost
 
@@ -1625,7 +1625,7 @@ else {
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CO.Kemp.LoadMaster.CPUSystemTotal.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CO.Kemp.LoadMaster.HA2IsActive.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
           <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
@@ -1633,9 +1633,9 @@ else {
             <Type>lm</Type>
             <IntervalSeconds>300</IntervalSeconds>
             <ObjectName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</ObjectName>
-            <CounterName>CPU_SystemTotal</CounterName>
+            <CounterName>HA2_IsActive</CounterName>
             <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
-            <Value>$Data/Property[@Name='CPU_SystemTotal']$</Value>
+            <Value>$Data/Property[@Name='HA2_IsActive']$</Value>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -1762,6 +1762,42 @@ else {
             <CounterName>VSTotals_BytesPerSec</CounterName>
             <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
             <Value>$Data/Property[@Name='VSTotals_BytesPerSec']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.LoadMaster.CPUSystemTotal.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</Identifier>
+            <Type>lm</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</ObjectName>
+            <CounterName>CPU_SystemTotal</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
+            <Value>$Data/Property[@Name='CPU_SystemTotal']$</Value>
+          </DataSource>
+        </DataSources>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+      <Rule ID="CO.Kemp.LoadMaster.HA1IsActive.Collection" Target="CO.Kemp.LoadMaster" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS" TypeID="CO.Kemp.PerformanceDataMapper.DataSource">
+            <Identifier>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</Identifier>
+            <Type>lm</Type>
+            <IntervalSeconds>300</IntervalSeconds>
+            <ObjectName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</ObjectName>
+            <CounterName>HA1_IsActive</CounterName>
+            <InstanceName>$Target/Property[Type='CO.Kemp.LoadMaster']/hostname$</InstanceName>
+            <Value>$Data/Property[@Name='HA1_IsActive']$</Value>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -2338,9 +2374,9 @@ This might effect the availability of it's VirtualService, depending on the numb
           <Name>KEMP SubVS Connections per Second Collection Rule</Name>
           <Description>Collects Connections per Second for KEMP SubVS</Description>
         </DisplayString>
-        <DisplayString ElementID="CO.Kemp.LoadMaster.CPUSystemTotal.Collection">
-          <Name>KEMP LM CPU System Total Collection Rule</Name>
-          <Description>Collects CPU System Total percent for KEMP LoadMaster</Description>
+        <DisplayString ElementID="CO.Kemp.LoadMaster.HA2IsActive.Collection">
+          <Name>KEMP LM HA2 IsActive Collection Rule</Name>
+          <Description>Collects if HA2 is Active (1) or Inactive (0) KEMP LoadMaster</Description>
         </DisplayString>
         <DisplayString ElementID="CO.Kemp.LoadMaster.MEMUsed.Collection">
           <Name>KEMP LM MEM Used Total Collection Rule</Name>
@@ -2369,6 +2405,14 @@ This might effect the availability of it's VirtualService, depending on the numb
         <DisplayString ElementID="CO.Kemp.LoadMaster.VSTotals_BytesPerSec.Collection">
           <Name>KEMP LM VSTOTALS Bytes per Sec Collection Rule</Name>
           <Description>Collects VSTOTALS Bytes per Second for KEMP LoadMaster</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.LoadMaster.CPUSystemTotal.Collection">
+          <Name>KEMP LM CPU System Total Collection Rule</Name>
+          <Description>Collects CPU System Total percent for KEMP LoadMaster</Description>
+        </DisplayString>
+        <DisplayString ElementID="CO.Kemp.LoadMaster.HA1IsActive.Collection">
+          <Name>KEMP LM HA1 IsActive Collection Rule</Name>
+          <Description>Collects if HA1 is Active (1) or Inactive (0) KEMP LoadMaster</Description>
         </DisplayString>
         <DisplayString ElementID="CO.Kemp.KempRunasProfile">
           <Name>KEMP Runas Profile</Name>

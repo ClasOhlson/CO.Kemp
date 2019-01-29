@@ -402,7 +402,7 @@ foreach ($url in $LoadMasterBaseUrls) {
     }
 
     if ($allHt.Count -gt 0) {
-        # got data in allHT, which means here's a LoadMaster returned.
+        # got data in allHT, which means there's a LoadMaster returned.
 
         [string] $identifier = $allHt.managementhost
 
