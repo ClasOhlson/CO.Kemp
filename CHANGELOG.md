@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CO.Kemp.LoadMaster.HA1IsActive.Collection
 - CO.Kemp.LoadMaster.HA2IsActive.Collection
 
+### Changed
+- Added variable/module cleanup routines to scripts to minimize memory leakage
+
 ## [v1.0.0-alpha.2]
 
 ### Added
