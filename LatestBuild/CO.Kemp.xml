@@ -3,7 +3,7 @@
   <Manifest>
     <Identity>
       <ID>CO.Kemp</ID>
-      <Version>1.0.0.175</Version>
+      <Version>1.0.0.176</Version>
     </Identity>
     <Name>CO.Kemp</Name>
     <References>
@@ -290,14 +290,14 @@
             <MemberModules>
               <ProbeAction ID="Script" TypeID="Windows!Microsoft.Windows.PowerShellDiscoveryProbe">
                 <ScriptName>Get-KempInfra.ps1</ScriptName>
-                <ScriptBody><![CDATA[$existingModules = @((Get-Module).Name) # Save existing modules
-$existingVars = @((Get-Variable -Scope Global).Name) # Save existing variables, put first in any script
-######################################
-
-param(
+                <ScriptBody><![CDATA[param(
     [string] $LoadMasterBaseUrls
 	, [string] $Debug
 )
+
+$existingModules = @((Get-Module).Name) # Save existing modules
+$existingVars = @((Get-Variable -Scope Global).Name) # Save existing variables, put first in any script
+######################################
 
 $Error.Clear() # Fresh start!
 $scriptName = "Get-KempInfra.ps1"

@@ -1,11 +1,11 @@
-$existingModules = @((Get-Module).Name) # Save existing modules
-$existingVars = @((Get-Variable -Scope Global).Name) # Save existing variables, put first in any script
-######################################
-
 param(
     [string] $LoadMasterBaseUrls
 	, [string] $Debug
 )
+
+$existingModules = @((Get-Module).Name) # Save existing modules
+$existingVars = @((Get-Variable -Scope Global).Name) # Save existing variables, put first in any script
+######################################
 
 $Error.Clear() # Fresh start!
 $scriptName = "Get-KempInfra.ps1"
