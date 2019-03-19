@@ -406,7 +406,7 @@ foreach ($url in $LoadMasterBaseUrls) {
     }
 
     if ($allHt.Count -gt 0) {
-        # got data in allHT, which means here's a LoadMaster returned.
+        # got data in allHT, which means there's a LoadMaster returned.
 
         [string] $identifier = $allHt.managementhost
 
@@ -539,6 +539,16 @@ foreach ($url in $LoadMasterBaseUrls) {
                 }
             }
         }
+    } else {
+        # No response from LoadMaster
+        # Create LM Propertybag for a "no response" error
+        $identifier = $(([System.Uri]$url).Host)
+
+        $pbHTArray.Add(@{
+            "objecttype" = "lm"
+            "responds"   = "no"
+            "identifier" = $identifier.Trim()
+        }) | Out-Null
     }
 }
 
