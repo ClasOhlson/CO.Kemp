@@ -1,3 +1,7 @@
+$existingModules = @((Get-Module).Name) # Save existing modules
+$existingVars = @((Get-Variable -Scope Global).Name) # Save existing variables, put first in any script
+######################################
+
 param(
     [string] $LoadMasterBaseUrls
 	, [string] $Debug
@@ -492,4 +496,21 @@ if ($error.Count -gt 0) {
 }
 else {
     $scomAPI.LogScriptEvent($scriptName, $eventId, 0, "`nDiscovery ran without errors." + $logString)
+}
+
+######################################
+# put last in any script
+foreach ($newVar in (Get-Variable -Exclude $existingVars -Scope Global).Name){
+    if ($newVar -ne "existingVars") {
+        $obj = Get-Variable -Name $newVar -ValueOnly
+        if ("Close" -in (Get-Member -InputObject $obj).Name) {$obj.Close}
+        if ("Dispose" -in (Get-Member -InputObject $obj).Name) {$obj.Dispose}
+        $obj = $null
+        Remove-Variable -Name "obj" -Force -Scope Global
+        Remove-Variable -Name $newVar -Force -Scope Global
+    }
+}
+Get-SCOMManagementGroupConnection | Remove-SCOMManagementGroupConnection
+foreach ($newModule in ((Get-Module).Name | Where-Object{$_ -notin $existingModules})){
+    Remove-Module -Name $newModule
 }
